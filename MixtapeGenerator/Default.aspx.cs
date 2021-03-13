@@ -12,6 +12,7 @@ using Amazon.DynamoDBv2.Model;
 using Amazon.DynamoDBv2.DocumentModel;
 using Table = Amazon.DynamoDBv2.DocumentModel.Table;
 using System.Web.UI.WebControls;
+using Newtonsoft.Json;
 
 namespace MixtapeGenerator
 {
@@ -119,6 +120,8 @@ namespace MixtapeGenerator
             RadioButtonList1.Items[2].Text = track2;
             RadioButtonList1.Items[3].Text = track3;
             RadioButtonList1.Items[4].Text = track4;
+
+            Section2.Visible = true;
         }
 
  
@@ -126,9 +129,13 @@ namespace MixtapeGenerator
         // After user confirms options, generate 20 recommended songs
         protected async void Button2_Submit_Click(object sender, EventArgs e)
         {
+            string song = Convert.ToString(TextBox1.Text);
+            string cover = await GenerateImage(song);
+            Image1.ImageUrl = cover;
+
             //SPOTIFY CREDENTIALS
-          string CLIENTID = System.Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_ID");
-          string CLIENTSECRET = System.Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_SECRET");
+            string CLIENTID = System.Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_ID");
+            string CLIENTSECRET = System.Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_SECRET");
             //connect to spotify
             var config = SpotifyClientConfig.CreateDefault();
             var request = new ClientCredentialsRequest(CLIENTID, CLIENTSECRET);
@@ -171,28 +178,29 @@ namespace MixtapeGenerator
                 }
             }
            // information for generating the reccomendations
-                        RecommendationsRequest recFinder = new RecommendationsRequest();
-                        recFinder.SeedTracks.Add(trackID);
-                        recFinder.SeedGenres.Add(artistGenres[0]);
-                        recFinder.SeedArtists.Add(artistID);
+           RecommendationsRequest recFinder = new RecommendationsRequest();
+           recFinder.SeedTracks.Add(trackID);
+           recFinder.SeedGenres.Add(artistGenres[0]);
+           recFinder.SeedArtists.Add(artistID);
 
-                        //WE CAN CHANGE AMOUNT OF SONGS WE WANT TO GENERATE HERE
-                        recFinder.Limit = 20;
+            //WE CAN CHANGE AMOUNT OF SONGS WE WANT TO GENERATE HERE
+            recFinder.Limit = 20;
 
-                        //performt he recommendation search
-                        var recList = spotify.Browse.GetRecommendations(recFinder);
+            //performt he recommendation search
+            var recList = spotify.Browse.GetRecommendations(recFinder);
 
-                        Console.WriteLine("\nReccomendations found: ");
+            Console.WriteLine("\nReccomendations found: ");
 
-                        string recommendations = "";
-                        for (int i = 0; i < recList.Result.Tracks.Count; i++)
-                        {
-                            string tmp = ("Song " + (i + 1) + ": \"" + recList.Result.Tracks[i].Name + "\" by " + recList.Result.Tracks[i].Artists[0].Name);
-                            recommendations.Concat(tmp);
-                            //maybe print the URL for a track here idk how to find it I'm happy with what is done so far.
-                        }
+            string recommendations = "";
+            for (int i = 0; i < recList.Result.Tracks.Count; i++)
+            {
+                string tmp = ("Song " + (i + 1) + ": \"" + recList.Result.Tracks[i].Name + "\" by " + recList.Result.Tracks[i].Artists[0].Name);
+                recommendations.Concat(tmp);
+                //maybe print the URL for a track here idk how to find it I'm happy with what is done so far.
+            }
 
-                        MixtapeList.Text = "Reccomendations found: " + recommendations;
+            MixtapeList.Text = "Reccomendations found: " + recommendations;
+            Section3.Visible = true;
         }
 
         protected async System.Threading.Tasks.Task<string> RetrieveTrackAsync(string trackNum, string IdType)
@@ -230,5 +238,40 @@ namespace MixtapeGenerator
 
             return "";
         }
+
+                // Generate a random image using the Unsplash API based on the song input
+        protected async System.Threading.Tasks.Task<String> GenerateImage(string song)
+        {
+            string imageURL;
+
+            // call to image API
+            HttpClient client = new HttpClient();
+            string APIKey = "UNSPLASH-KEY";
+            string URL = "https://api.unsplash.com/photos/random/?client_id=" + APIKey + "&collections=1459961" +"&query=" + song;
+            
+            HttpResponseMessage response = await client.GetAsync(URL);
+
+            // check that request is accepted 
+            if (response.IsSuccessStatusCode) // 2xx or 3xx code 
+            {
+                // Retrieve the json data from response 
+                string result = await response.Content.ReadAsStringAsync();
+
+                // Deserialize json data: 
+                UnsplashAPI.Rootobject root = JsonConvert.DeserializeObject<UnsplashAPI.Rootobject>(result);
+                imageURL = root.urls.small;
+            }
+
+            // else, use the default image
+            else
+            {
+                imageURL = "https://images.unsplash.com/photo-1608934923502-4398e955df00?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDEwfHx8ZW58MHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60";
+            }
+            Console.Write(imageURL);
+            
+            // return the image URL 
+            return imageURL;
+        }
+
     }
 }
