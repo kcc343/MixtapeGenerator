@@ -22,7 +22,6 @@
 
 <%--@* Section to display after user confirms the song from the list of results:
     Shows the generated playlist with a default image *@--%>
-    <div runat="server" ID="Section2" visible="false">
     <asp:Label ID="Label2" runat="server" Text="[Display list of options]"></asp:Label>
     <br />
     <asp:RadioButtonList ID="RadioButtonList1" runat="server">
@@ -34,15 +33,12 @@
     </asp:RadioButtonList>
 
     <asp:Button ID="Button2_Submit" runat="server" OnClick ="Button2_Submit_Click" Text="Confirm"/>
-    </div>
     
-    <div runat="server" ID="Section3" visible="false">
         <br />
         <br />
 
     <strong>
         <asp:Label ID="MixtapeTitle" runat="server" Text="Here is your mixetape!"></asp:Label></strong><br /> 
     <asp:Label ID="MixtapeList" runat="server" Text="[Display list of songs"></asp:Label>
-        </div>
 
 </asp:Content>
