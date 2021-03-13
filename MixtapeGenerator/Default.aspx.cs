@@ -189,7 +189,7 @@ namespace MixtapeGenerator
                             //maybe print the URL for a track here idk how to find it I'm happy with what is done so far.
                         }
 
-                        MixtapeTitle.Text = "Your personal mixtape is ready!"
+                        MixtapeTitle.Text = "Your personal mixtape is ready!";
 
                         MixtapeList.Text = recommendations;
         }
