@@ -22,7 +22,7 @@
 
 <%--@* Section to display after user confirms the song from the list of results:
     Shows the generated playlist with a default image *@--%>
-    <asp:Label ID="Label2" runat="server" Text="Songs that match your search will appear below, <br>so you can make sure we're getting it right!"></asp:Label>
+    <asp:Label ID="Label2" runat="server" Text="Songs that match your search will appear below for you to confirm."></asp:Label>
     <br />
     <asp:RadioButtonList ID="RadioButtonList1" runat="server">
         <asp:ListItem Value="0" Text=" Choice 1"></asp:ListItem> <%--Selected attribute--%>
