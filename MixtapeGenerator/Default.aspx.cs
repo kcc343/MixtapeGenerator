@@ -12,6 +12,7 @@ using Amazon.DynamoDBv2.Model;
 using Amazon.DynamoDBv2.DocumentModel;
 using Table = Amazon.DynamoDBv2.DocumentModel.Table;
 using System.Web.UI.WebControls;
+using Newtonsoft.Json;
 
 namespace MixtapeGenerator
 {
@@ -126,6 +127,11 @@ namespace MixtapeGenerator
         // After user confirms options, generate 20 recommended songs
         protected async void Button2_Submit_Click(object sender, EventArgs e)
         {
+            // Generate picture 
+            string song = Convert.ToString(TextBox1.Text);
+            string cover = await GenerateImage(song);
+            Image1.ImageUrl = cover;
+            
             //SPOTIFY CREDENTIALS
           string CLIENTID = System.Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_ID");
           string CLIENTSECRET = System.Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_SECRET");
@@ -230,5 +236,106 @@ namespace MixtapeGenerator
 
             return "";
         }
+    }
+    
+           protected async System.Threading.Tasks.Task GenerateImage(string song)
+        {
+            string imageURL;
+
+            HttpClient client = new HttpClient();
+            string APIKey = System.Environment.GetEnvironmentVariable("UNSPLASH_APIKEY");
+            string URL = "https://api.unsplash.com/photos/random/?client_id=" + APIKey + "&query=" + song + "&count=1";
+            HttpResponseMessage response = await client.GetAsync(URL);
+
+            if (response.IsSuccessStatusCode) // 2xx or 3xx code 
+            {
+                // Retrieve the json data from response 
+                string result = await response.Content.ReadAsStringAsync();
+
+                // Deserialize json data: 
+                Class1.Rootobject root = JsonConvert.DeserializeObject<Class1.Rootobject>(result);
+                imageURL = root.results[0].urls.small;
+            }
+
+            else
+            {
+                imageURL = "https://images.unsplash.com/photo-1608934923079-ef4aee854cd8?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80";
+            }
+
+            Image1.ImageUrl = imageURL;
+
+        }
+		
+
+    public class UnsplashAPI
+    {
+        public class Rootobject
+        {
+            public int total { get; set; }
+            public int total_pages { get; set; }
+            public Result[] results { get; set; }
+        }
+
+        public class Result
+        {
+            public string id { get; set; }
+            public DateTime created_at { get; set; }
+            public int width { get; set; }
+            public int height { get; set; }
+            public string color { get; set; }
+            public int likes { get; set; }
+            public bool liked_by_user { get; set; }
+            public string description { get; set; }
+            public User user { get; set; }
+            public object[] current_user_collections { get; set; }
+            public Urls urls { get; set; }
+            public Links1 links { get; set; }
+        }
+
+        public class User
+        {
+            public string id { get; set; }
+            public string username { get; set; }
+            public string name { get; set; }
+            public string first_name { get; set; }
+            public string last_name { get; set; }
+            public string instagram_username { get; set; }
+            public string twitter_username { get; set; }
+            public string portfolio_url { get; set; }
+            public Profile_Image profile_image { get; set; }
+            public Links links { get; set; }
+        }
+
+        public class Profile_Image
+        {
+            public string small { get; set; }
+            public string medium { get; set; }
+            public string large { get; set; }
+        }
+
+        public class Links
+        {
+            public string self { get; set; }
+            public string html { get; set; }
+            public string photos { get; set; }
+            public string likes { get; set; }
+        }
+
+        public class Urls
+        {
+            public string raw { get; set; }
+            public string full { get; set; }
+            public string regular { get; set; }
+            public string small { get; set; }
+            public string thumb { get; set; }
+        }
+
+        public class Links1
+        {
+            public string self { get; set; }
+            public string html { get; set; }
+            public string download { get; set; }
+        }
+
     }
 }
