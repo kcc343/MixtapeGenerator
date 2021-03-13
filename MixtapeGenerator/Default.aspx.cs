@@ -187,8 +187,8 @@ namespace MixtapeGenerator
                         string recommendations = "";
                         for (int i = 0; i < recList.Result.Tracks.Count; i++)
                         {
-                            string tmp = ("Song " + (i + 1) + ": \"" + recList.Result.Tracks[i].Name + "\" by " + recList.Result.Tracks[i].Artists[0].Name);
-                            recommendations.Concat(tmp);
+                            string tmp = ("Song " + (i + 1) + ": \"" + recList.Result.Tracks[i].Name + "\" by " + recList.Result.Tracks[i].Artists[0].Name + "<br>");
+                            recommendations += tmp;
                             //maybe print the URL for a track here idk how to find it I'm happy with what is done so far.
                         }
 
