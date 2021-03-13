@@ -22,14 +22,14 @@
 
 <%--@* Section to display after user confirms the song from the list of results:
     Shows the generated playlist with a default image *@--%>
-    <asp:Label ID="Label2" runat="server" Text="[Display list of options]"></asp:Label>
+    <asp:Label ID="Label2" runat="server" Text="Confirm the right song:"></asp:Label>
     <br />
     <asp:RadioButtonList ID="RadioButtonList1" runat="server">
-        <asp:ListItem Value="0" Text="Choice0"></asp:ListItem> <%--Selected attribute--%>
-        <asp:ListItem Value="1" Text="Choice1"></asp:ListItem>
-        <asp:ListItem Value="2" Text="Choice2"></asp:ListItem>
-        <asp:ListItem Value="3" Text="Choice3"></asp:ListItem>
-        <asp:ListItem Value="4" Text="Choice4"></asp:ListItem>
+        <asp:ListItem Value="0" Text="Enter a"></asp:ListItem> <%--Selected attribute--%>
+        <asp:ListItem Value="1" Text="song"></asp:ListItem>
+        <asp:ListItem Value="2" Text="to"></asp:ListItem>
+        <asp:ListItem Value="3" Text="unlock"></asp:ListItem>
+        <asp:ListItem Value="4" Text="these options!"></asp:ListItem>
     </asp:RadioButtonList>
 
     <asp:Button ID="Button2_Submit" runat="server" OnClick ="Button2_Submit_Click" Text="Confirm"/>

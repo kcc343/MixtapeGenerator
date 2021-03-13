@@ -47,8 +47,6 @@ namespace MixtapeGenerator
                 // display an error message
             }
 
-            Label1.Text = "Searching for " + song;
-
             //spotify credentials
 
           string CLIENTID = System.Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_ID");
@@ -109,11 +107,11 @@ namespace MixtapeGenerator
             }
 
 
-            string track0 = trackResults.Result[0].Name + "\" by \"" + trackResults.Result[0].Artists[0].Name + "\"" + " From the album \"" + trackResults.Result[0].Album.Name;
-            string track1 = trackResults.Result[1].Name + "\" by \"" + trackResults.Result[1].Artists[0].Name + "\"" + " From the album \"" + trackResults.Result[1].Album.Name;
-            string track2 = trackResults.Result[2].Name + "\" by \"" + trackResults.Result[2].Artists[0].Name + "\"" + " From the album \"" + trackResults.Result[2].Album.Name;
-            string track3 = trackResults.Result[3].Name + "\" by \"" + trackResults.Result[3].Artists[0].Name + "\"" + " From the album \"" + trackResults.Result[3].Album.Name;
-            string track4 = trackResults.Result[4].Name + "\" by \"" + trackResults.Result[4].Artists[0].Name + "\"" + " From the album \"" + trackResults.Result[4].Album.Name;
+            string track0 = "\"" + trackResults.Result[0].Name + "\" by"  + trackResults.Result[0].Artists[0].Name + "<br>" + "from the album \"" + trackResults.Result[0].Album.Name;
+            string track1 = "\"" + trackResults.Result[1].Name + "\" by"  + trackResults.Result[1].Artists[0].Name + "<br>" + "From the album \"" + trackResults.Result[1].Album.Name;
+            string track2 = "\"" + trackResults.Result[2].Name + "\" by"  + trackResults.Result[2].Artists[0].Name + "<br>" + "From the album \"" + trackResults.Result[2].Album.Name;
+            string track3 = "\"" + trackResults.Result[3].Name + "\" by"  + trackResults.Result[3].Artists[0].Name + "<br>" + "From the album \"" + trackResults.Result[3].Album.Name;
+            string track4 = "\"" + trackResults.Result[4].Name + "\" by"  + trackResults.Result[4].Artists[0].Name + "<br>" + "From the album \"" + trackResults.Result[4].Album.Name;
 
             RadioButtonList1.Items[0].Text = track0;
             RadioButtonList1.Items[1].Text = track1;
@@ -183,17 +181,15 @@ namespace MixtapeGenerator
                         //performt he recommendation search
                         var recList = spotify.Browse.GetRecommendations(recFinder);
 
-                        Console.WriteLine("\nReccomendations found: ");
-
                         string recommendations = "";
                         for (int i = 0; i < recList.Result.Tracks.Count; i++)
                         {
-                            string tmp = ("Song " + (i + 1) + ": \"" + recList.Result.Tracks[i].Name + "\" by " + recList.Result.Tracks[i].Artists[0].Name + "<br>");
+                            string tmp = ((i + 1) + "- \"" + recList.Result.Tracks[i].Name + "\" by " + recList.Result.Tracks[i].Artists[0].Name + "<br>");
                             recommendations += tmp;
                             //maybe print the URL for a track here idk how to find it I'm happy with what is done so far.
                         }
 
-                        MixtapeList.Text = "Reccomendations found: " + recommendations;
+                        MixtapeList.Text = recommendations;
         }
 
         protected async System.Threading.Tasks.Task<string> RetrieveTrackAsync(string trackNum, string IdType)
