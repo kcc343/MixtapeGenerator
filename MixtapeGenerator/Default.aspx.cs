@@ -119,6 +119,7 @@ namespace MixtapeGenerator
             RadioButtonList1.Items[2].Text = track2;
             RadioButtonList1.Items[3].Text = track3;
             RadioButtonList1.Items[4].Text = track4;
+            Section2.Visible = true;
         }
 
  
@@ -193,6 +194,7 @@ namespace MixtapeGenerator
                         }
 
                         MixtapeList.Text = "Reccomendations found: " + recommendations;
+                        Section3.Visible = true;
         }
 
         protected async System.Threading.Tasks.Task<string> RetrieveTrackAsync(string trackNum, string IdType)
