@@ -127,8 +127,8 @@ namespace MixtapeGenerator
         protected async void Button2_Submit_Click(object sender, EventArgs e)
         {
             //SPOTIFY CREDENTIALS
-            string CLIENTID = "SPOTIFYKEY";
-            string CLIENTSECRET = "SPOTIFYSECRET";
+          string CLIENTID = System.Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_ID");
+          string CLIENTSECRET = System.Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_SECRET");
             //connect to spotify
             var config = SpotifyClientConfig.CreateDefault();
             var request = new ClientCredentialsRequest(CLIENTID, CLIENTSECRET);
@@ -198,8 +198,8 @@ namespace MixtapeGenerator
         protected async System.Threading.Tasks.Task<string> RetrieveTrackAsync(string trackNum, string IdType)
         {
             //amazon credentials and info
-            string ACCOUNTID = "AMAZONKEY";
-            string ACCOUNTKEY = "AMAZONSECRET";
+            string ACCOUNTID = System.Environment.GetEnvironmentVariable("AMAZON_ACCOUNTID");
+            string ACCOUNTKEY = System.Environment.GetEnvironmentVariable("AMAZON_ACCOUNTKEY");
             string tableName = "Program5";
             //connect to amazon
             var credentials = new BasicAWSCredentials(ACCOUNTID, ACCOUNTKEY);
