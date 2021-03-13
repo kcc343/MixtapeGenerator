@@ -39,7 +39,6 @@
 
     <strong>
         <asp:Label ID="MixtapeTitle" runat="server" Text="Here is your mixtape!"></asp:Label></strong><br /> 
-        <asp:Image ID="Image1" runat="server" Width="400px"/>
-    <asp:Label ID="MixtapeList" runat="server" Text="[Display list of songs"></asp:Label>
+    <asp:Label ID="MixtapeList" runat="server" Text=""></asp:Label>
 
 </asp:Content>
