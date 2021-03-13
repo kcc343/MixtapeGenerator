@@ -22,14 +22,14 @@
 
 <%--@* Section to display after user confirms the song from the list of results:
     Shows the generated playlist with a default image *@--%>
-    <asp:Label ID="Label2" runat="server" Text="Confirm the right song:"></asp:Label>
+    <asp:Label ID="Label2" runat="server" Text="Songs that match your search will appear below, <br>so you can make sure we're getting it right!"></asp:Label>
     <br />
     <asp:RadioButtonList ID="RadioButtonList1" runat="server">
-        <asp:ListItem Value="0" Text="Enter a"></asp:ListItem> <%--Selected attribute--%>
-        <asp:ListItem Value="1" Text="song"></asp:ListItem>
-        <asp:ListItem Value="2" Text="to"></asp:ListItem>
-        <asp:ListItem Value="3" Text="unlock"></asp:ListItem>
-        <asp:ListItem Value="4" Text="these options!"></asp:ListItem>
+        <asp:ListItem Value="0" Text=" Choice 1"></asp:ListItem> <%--Selected attribute--%>
+        <asp:ListItem Value="1" Text=" Choice 2"></asp:ListItem>
+        <asp:ListItem Value="2" Text=" Choice 3"></asp:ListItem>
+        <asp:ListItem Value="3" Text=" Choice 4"></asp:ListItem>
+        <asp:ListItem Value="4" Text=" Choice 5"></asp:ListItem>
     </asp:RadioButtonList>
 
     <asp:Button ID="Button2_Submit" runat="server" OnClick ="Button2_Submit_Click" Text="Confirm"/>
@@ -38,7 +38,7 @@
         <br />
 
     <strong>
-        <asp:Label ID="MixtapeTitle" runat="server" Text="Here is your mixtape!"></asp:Label></strong><br /> 
+        <asp:Label ID="MixtapeTitle" runat="server" Text=""></asp:Label></strong><br /> 
     <asp:Label ID="MixtapeList" runat="server" Text=""></asp:Label>
 
 </asp:Content>
