@@ -50,12 +50,12 @@ namespace MixtapeGenerator
 
             //spotify credentials
 
-            string CLIENTID = "clientid";
-            string CLIENTSECRET = "clientsecret";
+            string CLIENTID = "SPOTIFYKEY";
+            string CLIENTSECRET = "SPOTIFYSECRET";
 
             //amazon credentials and info
-            string ACCOUNTID = "AMAZONIDHERE";
-            string ACCOUNTKEY = "AMAZONKEYHERE";
+            string ACCOUNTID = "AMAZONKEY";
+            string ACCOUNTKEY = "AMAZONSECRET";
             string tableName = "Program5";
 
             //connect to spotify
@@ -107,8 +107,7 @@ namespace MixtapeGenerator
                 }
             }
 
-            // Iterate through the buttons by looking at the Value 
-            // Update the Text attribute
+
             string track0 = trackResults.Result[0].Name + "\" by \"" + trackResults.Result[0].Artists[0].Name + "\"" + " From the album \"" + trackResults.Result[0].Album.Name;
             string track1 = trackResults.Result[1].Name + "\" by \"" + trackResults.Result[1].Artists[0].Name + "\"" + " From the album \"" + trackResults.Result[1].Album.Name;
             string track2 = trackResults.Result[2].Name + "\" by \"" + trackResults.Result[2].Artists[0].Name + "\"" + " From the album \"" + trackResults.Result[2].Album.Name;
@@ -122,9 +121,20 @@ namespace MixtapeGenerator
             RadioButtonList1.Items[4].Text = track4;
         }
 
+ 
+
         // After user confirms options, generate 20 recommended songs
         protected async void Button2_Submit_Click(object sender, EventArgs e)
         {
+            //SPOTIFY CREDENTIALS
+            string CLIENTID = "SPOTIFYKEY";
+            string CLIENTSECRET = "SPOTIFYSECRET";
+            //connect to spotify
+            var config = SpotifyClientConfig.CreateDefault();
+            var request = new ClientCredentialsRequest(CLIENTID, CLIENTSECRET);
+            var response = await new OAuthClient(config).RequestToken(request);
+            spotify = new SpotifyClient(config.WithToken(response.AccessToken));
+
             // returns [0, 1, 2, 3, 4] based on selected value
             string selected = RadioButtonList1.SelectedValue;
 
@@ -133,8 +143,8 @@ namespace MixtapeGenerator
             ////this should be seperate method
             //// Matches the choice from the list 
             //// choice = input from default.aspx
-            string trackID = await RetrieveTrackAsync(selected, "track id");
-            string artistID = await RetrieveTrackAsync(selected, "track id");
+            string trackID = await RetrieveTrackAsync(selected, "track id"); 
+            string artistID = await RetrieveTrackAsync(selected, "artist id");
             string artist = await RetrieveTrackAsync(selected, "artist");
 
             //get the genres of the artist by searching for the exact artist name based on choice from user
@@ -145,7 +155,8 @@ namespace MixtapeGenerator
             //go through every artist until we find a matching artist ID.
             //This may be problematic if we run into a weird case where we get the ID but when searching by name the artist doesnt show up
             //I set i to 50 because I wasn't sure how to iterate through the whole ilist, 80% sure we will have a 99% chance we find the artist
-            for (int i = 0; i < 50; i++)
+
+            for (int i = 0; i < artistResults.Result.Count; i++)
             {
                 if (artistResults.Result[i] == null)
                 {
@@ -159,37 +170,36 @@ namespace MixtapeGenerator
                     break;
                 }
             }
+           // information for generating the reccomendations
+                        RecommendationsRequest recFinder = new RecommendationsRequest();
+                        recFinder.SeedTracks.Add(trackID);
+                        recFinder.SeedGenres.Add(artistGenres[0]);
+                        recFinder.SeedArtists.Add(artistID);
 
-            // information for generating the reccomendations
-            RecommendationsRequest recFinder = new RecommendationsRequest();
-            recFinder.SeedTracks.Add(trackID);
-            recFinder.SeedGenres.Add(artistGenres[0]);
-            recFinder.SeedArtists.Add(artistID);
+                        //WE CAN CHANGE AMOUNT OF SONGS WE WANT TO GENERATE HERE
+                        recFinder.Limit = 20;
 
-            //WE CAN CHANGE AMOUNT OF SONGS WE WANT TO GENERATE HERE
-            recFinder.Limit = 20;
+                        //performt he recommendation search
+                        var recList = spotify.Browse.GetRecommendations(recFinder);
 
-            //performt he recommendation search
-            var recList = spotify.Browse.GetRecommendations(recFinder);
+                        Console.WriteLine("\nReccomendations found: ");
 
-            Console.WriteLine("\nReccomendations found: ");
+                        string recommendations = "";
+                        for (int i = 0; i < recList.Result.Tracks.Count; i++)
+                        {
+                            string tmp = ("Song " + (i + 1) + ": \"" + recList.Result.Tracks[i].Name + "\" by " + recList.Result.Tracks[i].Artists[0].Name);
+                            recommendations.Concat(tmp);
+                            //maybe print the URL for a track here idk how to find it I'm happy with what is done so far.
+                        }
 
-            string recommendations = "";
-            for (int i = 0; i < recList.Result.Tracks.Count; i++)
-            {
-                string tmp = ("Song " + (i + 1) + ": \"" + recList.Result.Tracks[i].Name + "\" by " + recList.Result.Tracks[i].Artists[0].Name);
-                recommendations.Concat(tmp);
-                //maybe print the URL for a track here idk how to find it I'm happy with what is done so far.
-            }
-
-            MixtapeList.Text = "Reccomendations found: " + recommendations;
+                        MixtapeList.Text = "Reccomendations found: " + recommendations;
         }
 
         protected async System.Threading.Tasks.Task<string> RetrieveTrackAsync(string trackNum, string IdType)
         {
             //amazon credentials and info
-            string ACCOUNTID = "AMAZONIDHERE";
-            string ACCOUNTKEY = "AMAZONKEYHERE";
+            string ACCOUNTID = "AMAZONKEY";
+            string ACCOUNTKEY = "AMAZONSECRET";
             string tableName = "Program5";
             //connect to amazon
             var credentials = new BasicAWSCredentials(ACCOUNTID, ACCOUNTKEY);
