@@ -106,7 +106,7 @@ namespace MixtapeGenerator
                 }
             }
 
-            Label2.Text = "Please confirm which song you have in mind:"
+            Label2.Text = "Please confirm which song you have in mind:";
             string track0 = " \"" + trackResults.Result[0].Name + "\" by "  + trackResults.Result[0].Artists[0].Name + "from the album \"" + trackResults.Result[0].Album.Name;
             string track1 = " \"" + trackResults.Result[1].Name + "\" by "  + trackResults.Result[1].Artists[0].Name + "from the album \"" + trackResults.Result[1].Album.Name;
             string track2 = " \"" + trackResults.Result[2].Name + "\" by "  + trackResults.Result[2].Artists[0].Name + "from the album \"" + trackResults.Result[2].Album.Name;
