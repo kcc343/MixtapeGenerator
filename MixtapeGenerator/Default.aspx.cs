@@ -106,12 +106,12 @@ namespace MixtapeGenerator
                 }
             }
 
-            Label2.Text = "Please confirm which song you have in mind:";
-            string track0 = " \"" + trackResults.Result[0].Name + "\" by "  + trackResults.Result[0].Artists[0].Name + "from the album \"" + trackResults.Result[0].Album.Name;
-            string track1 = " \"" + trackResults.Result[1].Name + "\" by "  + trackResults.Result[1].Artists[0].Name + "from the album \"" + trackResults.Result[1].Album.Name;
-            string track2 = " \"" + trackResults.Result[2].Name + "\" by "  + trackResults.Result[2].Artists[0].Name + "from the album \"" + trackResults.Result[2].Album.Name;
-            string track3 = " \"" + trackResults.Result[3].Name + "\" by "  + trackResults.Result[3].Artists[0].Name + "from the album \"" + trackResults.Result[3].Album.Name;
-            string track4 = " \"" + trackResults.Result[4].Name + "\" by "  + trackResults.Result[4].Artists[0].Name + "from the album \"" + trackResults.Result[4].Album.Name;
+            Label2.Text = "Please confirm your song choice:";
+            string track0 = " \"" + trackResults.Result[0].Name + "\" by "  + trackResults.Result[0].Artists[0].Name + " from the album \"" + trackResults.Result[0].Album.Name + "\"";
+            string track1 = " \"" + trackResults.Result[1].Name + "\" by "  + trackResults.Result[1].Artists[0].Name + " from the album \"" + trackResults.Result[1].Album.Name + "\"";
+            string track2 = " \"" + trackResults.Result[2].Name + "\" by "  + trackResults.Result[2].Artists[0].Name + " from the album \"" + trackResults.Result[2].Album.Name + "\"";
+            string track3 = " \"" + trackResults.Result[3].Name + "\" by "  + trackResults.Result[3].Artists[0].Name + " from the album \"" + trackResults.Result[3].Album.Name + "\"";
+            string track4 = " \"" + trackResults.Result[4].Name + "\" by "  + trackResults.Result[4].Artists[0].Name + " from the album \"" + trackResults.Result[4].Album.Name + "\"";
 
             RadioButtonList1.Items[0].Text = track0;
             RadioButtonList1.Items[1].Text = track1;
