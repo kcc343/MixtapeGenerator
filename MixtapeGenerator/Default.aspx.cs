@@ -32,7 +32,7 @@ namespace MixtapeGenerator
         protected async void Button1_Submit_Click(object sender, EventArgs e)
         {
             // Get song from user via TextBox
-            // string song = Convert.ToString(TextBox1.Text);
+            string song = Convert.ToString(TextBox1.Text);
             // Get artist from user via TextBox
             string artist = Convert.ToString(TextBox2.Text);
 
@@ -44,8 +44,8 @@ namespace MixtapeGenerator
             string CLIENTSECRET = System.Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_SECRET");
 
             //amazon credentials and info
-            string ACCOUNTID = System.Environment.GetEnvironmentVariable("AMAZON_ACCOUNTID");
-            string ACCOUNTKEY = System.Environment.GetEnvironmentVariable("AMAZON_ACCOUNTKEY");
+            // string ACCOUNTID = System.Environment.GetEnvironmentVariable("AMAZON_ACCOUNTID");
+            // string ACCOUNTKEY = System.Environment.GetEnvironmentVariable("AMAZON_ACCOUNTKEY");
             string tableName = "Program5";
 
             //connect to spotify
