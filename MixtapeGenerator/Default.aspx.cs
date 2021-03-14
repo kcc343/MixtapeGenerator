@@ -32,17 +32,6 @@ namespace MixtapeGenerator
         // Uses Spotify Search API to find the root song 
         protected async void Button1_Submit_Click(object sender, EventArgs e)
         {
-            // Reset page in case previous results are displayed
-            Label1.Text = "";
-            MixtapeTitle.Text = "";
-            MixtapeList.Text = "";
-            Image1.ImageUrl = ""; 
-            RadioButtonList1.Items[0].Text = " Choice -";
-            RadioButtonList1.Items[1].Text = " Choice -";
-            RadioButtonList1.Items[2].Text = " Choice -";
-            RadioButtonList1.Items[3].Text = " Choice -";
-            RadioButtonList1.Items[4].Text = " Choice -";
-            
             // Get song from user via TextBox
             string song = Convert.ToString(TextBox1.Text);
             // Get artist from user via TextBox
@@ -85,14 +74,14 @@ namespace MixtapeGenerator
                 Dictionary<string, AttributeValue> attributes = new Dictionary<string, AttributeValue>();
 
                 string temp = "";
-                //int count = 0; 
+                int count = 0; 
 
                 //print list of first 5 items that appear in search result
-                for (int i = 0; i < 5 || i != trackResults.Result.Count; i++)
+                for (int i = 0; i < 5 && i <= trackResults.Result.Count; i++)
                 {
                     if (trackResults.Result[i] != null)
                     {
-                        //count++; 
+                        count++; 
                         temp = i + ": \"" + trackResults.Result[i].Name + "\" by \"" + trackResults.Result[i].Artists[0].Name
                             + "\"" + " From the album \"" + trackResults.Result[i].Album.Name + "\"";
 
@@ -113,7 +102,7 @@ namespace MixtapeGenerator
 
                 Label2.Text = "Please confirm your song choice:";
 
-                if (trackResults.Result.Count == 0)
+                if (count == 0)
                 {
                     Label1.Text = "No match for this song. Try another one.";
                 }
@@ -121,15 +110,18 @@ namespace MixtapeGenerator
                 else
                 {
                     // Replace the choices with the song track 
-                    for (int j = 0; j < 5; j++)
+                    for (int j = 0; j < count; j++)
                     {
-                        if (j <= trackResults.Result.Count)
+                        string track = " \"" + trackResults.Result[j].Name + "\" by " + trackResults.Result[j].Artists[0].Name + " from the album \"" + trackResults.Result[j].Album.Name + "\"";
+                        RadioButtonList1.Items[j].Text = track;
+                    }
+
+                    // Remove choices if results are less than 5 
+                    for (int k = 0; k < 5; k++)
+                    {
+                        if (RadioButtonList1.Items[k].Text == " Choice -")
                         {
-                            string track = " \"" + trackResults.Result[j].Name + "\" by " + trackResults.Result[j].Artists[0].Name + " from the album \"" + trackResults.Result[j].Album.Name + "\"";
-                            RadioButtonList1.Items[j].Text = track;
-                        } else
-                        {
-                            RadioButtonList1.Items[j].Enabled = false;
+                            RadioButtonList1.Items[k].Enabled = false;
                         }
                     }
                     //string track0 = " \"" + trackResults.Result[0].Name + "\" by " + trackResults.Result[0].Artists[0].Name + " from the album \"" + trackResults.Result[0].Album.Name + "\"";
