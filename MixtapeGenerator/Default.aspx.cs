@@ -32,6 +32,17 @@ namespace MixtapeGenerator
         // Uses Spotify Search API to find the root song 
         protected async void Button1_Submit_Click(object sender, EventArgs e)
         {
+            // Reset page in case previous results are displayed
+            Label1.Text = "";
+            MixtapeTitle.Text = "";
+            MixtapeList.Text = "";
+            Image1.ImageUrl = ""; 
+            RadioButtonList1.Items[0].Text = " Choice -";
+            RadioButtonList1.Items[1].Text = " Choice -";
+            RadioButtonList1.Items[2].Text = " Choice -";
+            RadioButtonList1.Items[3].Text = " Choice -";
+            RadioButtonList1.Items[4].Text = " Choice -";
+            
             // Get song from user via TextBox
             string song = Convert.ToString(TextBox1.Text);
             // Get artist from user via TextBox
