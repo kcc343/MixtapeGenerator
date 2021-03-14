@@ -38,11 +38,11 @@
             Text="After you submit a song and artist, songs that match your search will appear below."></asp:Label>
 
         <asp:RadioButtonList ID="RadioButtonList1" runat="server" Font-Size="Smaller" Font-Bold="false">
-            <asp:ListItem Value="0" Text=" Choice 1" Selected="True"></asp:ListItem> <%--Selected attribute--%>
-            <asp:ListItem Value="1" Text=" Choice 2"></asp:ListItem>
-            <asp:ListItem Value="2" Text=" Choice 3"></asp:ListItem>
-            <asp:ListItem Value="3" Text=" Choice 4"></asp:ListItem>
-            <asp:ListItem Value="4" Text=" Choice 5"></asp:ListItem>
+            <asp:ListItem Value="0" Text="--" Selected="True"></asp:ListItem> <%--Selected attribute--%>
+            <asp:ListItem Value="1" Text="--"></asp:ListItem>
+            <asp:ListItem Value="2" Text="--"></asp:ListItem>
+            <asp:ListItem Value="3" Text="--"></asp:ListItem>
+            <asp:ListItem Value="4" Text="--"></asp:ListItem>
         </asp:RadioButtonList>
 
         <asp:Button ID="Button2_Submit" runat="server" OnClick ="Button2_Submit_Click" Text="Confirm"/>

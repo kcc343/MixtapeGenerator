@@ -13,6 +13,7 @@ using Amazon.DynamoDBv2.DocumentModel;
 using Table = Amazon.DynamoDBv2.DocumentModel.Table;
 using System.Web.UI.WebControls;
 using Newtonsoft.Json;
+using System.Collections;
 
 namespace MixtapeGenerator
 {
@@ -39,7 +40,7 @@ namespace MixtapeGenerator
             // Both input required, checked via .aspx file 
             string searchSong = song + " " + artist;
 
-            //spotify credentials
+            //Spotify:
             string CLIENTID = System.Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_ID");
             string CLIENTSECRET = System.Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_SECRET");
 
@@ -73,12 +74,14 @@ namespace MixtapeGenerator
                 Dictionary<string, AttributeValue> attributes = new Dictionary<string, AttributeValue>();
 
                 string temp = "";
+                int count = 0; 
 
                 //print list of first 5 items that appear in search result
                 for (int i = 0; i < 5; i++)
                 {
                     if (trackResults.Result[i] != null)
                     {
+                        count++; 
                         temp = i + ": \"" + trackResults.Result[i].Name + "\" by \"" + trackResults.Result[i].Artists[0].Name
                             + "\"" + " From the album \"" + trackResults.Result[i].Album.Name + "\"";
 
@@ -98,17 +101,41 @@ namespace MixtapeGenerator
                 }
 
                 Label2.Text = "Please confirm your song choice:";
-                string track0 = " \"" + trackResults.Result[0].Name + "\" by " + trackResults.Result[0].Artists[0].Name + " from the album \"" + trackResults.Result[0].Album.Name + "\"";
-                string track1 = " \"" + trackResults.Result[1].Name + "\" by " + trackResults.Result[1].Artists[0].Name + " from the album \"" + trackResults.Result[1].Album.Name + "\"";
-                string track2 = " \"" + trackResults.Result[2].Name + "\" by " + trackResults.Result[2].Artists[0].Name + " from the album \"" + trackResults.Result[2].Album.Name + "\"";
-                string track3 = " \"" + trackResults.Result[3].Name + "\" by " + trackResults.Result[3].Artists[0].Name + " from the album \"" + trackResults.Result[3].Album.Name + "\"";
-                string track4 = " \"" + trackResults.Result[4].Name + "\" by " + trackResults.Result[4].Artists[0].Name + " from the album \"" + trackResults.Result[4].Album.Name + "\"";
 
-                RadioButtonList1.Items[0].Text = track0;
-                RadioButtonList1.Items[1].Text = track1;
-                RadioButtonList1.Items[2].Text = track2;
-                RadioButtonList1.Items[3].Text = track3;
-                RadioButtonList1.Items[4].Text = track4;
+                if (count == 0)
+                {
+                    Label1.Text = "No match for this song. Try another one.";
+                }
+
+                else
+                {
+                    // Replace the choices with the song track 
+                    for (int j = 0; j < count; j++)
+                    {
+                        string track = " \"" + trackResults.Result[j].Name + "\" by " + trackResults.Result[j].Artists[0].Name + " from the album \"" + trackResults.Result[j].Album.Name + "\"";
+                        RadioButtonList1.Items[j].Text = track;
+                    }
+
+                    // Remove choices if results are less than 5 
+                    for (int k = 0; k < 5; k++)
+                    {
+                        if (RadioButtonList1.Items[k].Text == " Choice -")
+                        {
+                            RadioButtonList1.Items[k].Enabled = false;
+                        }
+                    }
+                    //string track0 = " \"" + trackResults.Result[0].Name + "\" by " + trackResults.Result[0].Artists[0].Name + " from the album \"" + trackResults.Result[0].Album.Name + "\"";
+                    //string track1 = " \"" + trackResults.Result[1].Name + "\" by " + trackResults.Result[1].Artists[0].Name + " from the album \"" + trackResults.Result[1].Album.Name + "\"";
+                    //string track2 = " \"" + trackResults.Result[2].Name + "\" by " + trackResults.Result[2].Artists[0].Name + " from the album \"" + trackResults.Result[2].Album.Name + "\"";
+                    //string track3 = " \"" + trackResults.Result[3].Name + "\" by " + trackResults.Result[3].Artists[0].Name + " from the album \"" + trackResults.Result[3].Album.Name + "\"";
+                    //string track4 = " \"" + trackResults.Result[4].Name + "\" by " + trackResults.Result[4].Artists[0].Name + " from the album \"" + trackResults.Result[4].Album.Name + "\"";
+
+                    //RadioButtonList1.Items[0].Text = track0;
+                    //RadioButtonList1.Items[1].Text = track1;
+                    //RadioButtonList1.Items[2].Text = track2;
+                    //RadioButtonList1.Items[3].Text = track3;
+                    //RadioButtonList1.Items[4].Text = track4;
+                }
             }
             catch (Exception)
             {
@@ -194,13 +221,13 @@ namespace MixtapeGenerator
 
                 MixtapeTitle.Text = "Your personal mixtape is ready!";
                 MixtapeList.Text = recommendations;
+
             } else
             {
                 MixtapeTitle.Text = "Error: Unable to create playlist for this song";
             }
 
         }
-
 
         protected async System.Threading.Tasks.Task<string> RetrieveTrackAsync(string trackNum, string IdType)
         {
@@ -247,8 +274,8 @@ namespace MixtapeGenerator
 
            // call to image API
            var client = new HttpClient();
-           string APIKey = System.Environment.GetEnvironmentVariable("UNSPLASH_API_KEY");
-           string URL = "https://api.unsplash.com/photos/random/?client_id=" + APIKey + "&collections=1459961" + "&query=" + song;
+            string APIKey = System.Environment.GetEnvironmentVariable("UNSPLASH_API_KEY");
+            string URL = "https://api.unsplash.com/photos/random/?client_id=" + APIKey + "&collections=1459961" + "&query=" + song;
 
            var response = await client.GetAsync(URL);
 
