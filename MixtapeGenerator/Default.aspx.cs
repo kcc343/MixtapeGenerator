@@ -21,8 +21,9 @@ namespace MixtapeGenerator
         SpotifyClient spotify;
 
 
-        protected void Page_Load(object sender, EventArgs e) {
-            
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
 
         }
 
@@ -52,22 +53,18 @@ namespace MixtapeGenerator
             var request = new ClientCredentialsRequest(CLIENTID, CLIENTSECRET);
             var response = await new OAuthClient(config).RequestToken(request);
             spotify = new SpotifyClient(config.WithToken(response.AccessToken));
-            
+            //NEED SOME SORT OF CHECKING FOR THESE CONNECTIONS
+
             //connect to amazon
             var credentials = new BasicAWSCredentials(ACCOUNTID, ACCOUNTKEY);
             AmazonDynamoDBClient client = new AmazonDynamoDBClient(credentials, RegionEndpoint.USWest2);
-            
+            //NEED SOME SORT OF CHECKING FOR THESE CONNECTIONS
+
             // Await response from Spotify API 
-            var search = await spotify.Search.Item(new SearchRequest(SearchRequest.Types.Track, searchSong));
-
-            // Check if spotify returns a response 
-            if (search == null)
+            try
             {
-                Label1.Text = "No matching song for the input. Please try again.";
-            }
+                var search = await spotify.Search.Item(new SearchRequest(SearchRequest.Types.Track, searchSong));
 
-            // If there's a response, add to DB
-            else { 
                 //Get tracks from search result
                 var trackResults = spotify.PaginateAll(search.Tracks, (s) => s.Tracks);
 
@@ -82,7 +79,7 @@ namespace MixtapeGenerator
                 {
                     if (trackResults.Result[i] != null)
                     {
-                        temp = i + ": \"" + trackResults.Result[i].Name + "\" by \"" + trackResults.Result[i].Artists[0].Name 
+                        temp = i + ": \"" + trackResults.Result[i].Name + "\" by \"" + trackResults.Result[i].Artists[0].Name
                             + "\"" + " From the album \"" + trackResults.Result[i].Album.Name + "\"";
 
                         //store track information into dynamodb
@@ -101,17 +98,21 @@ namespace MixtapeGenerator
                 }
 
                 Label2.Text = "Please confirm your song choice:";
-                string track0 = " \"" + trackResults.Result[0].Name + "\" by "  + trackResults.Result[0].Artists[0].Name + " from the album \"" + trackResults.Result[0].Album.Name + "\"";
-                string track1 = " \"" + trackResults.Result[1].Name + "\" by "  + trackResults.Result[1].Artists[0].Name + " from the album \"" + trackResults.Result[1].Album.Name + "\"";
-                string track2 = " \"" + trackResults.Result[2].Name + "\" by "  + trackResults.Result[2].Artists[0].Name + " from the album \"" + trackResults.Result[2].Album.Name + "\"";
-                string track3 = " \"" + trackResults.Result[3].Name + "\" by "  + trackResults.Result[3].Artists[0].Name + " from the album \"" + trackResults.Result[3].Album.Name + "\"";
-                string track4 = " \"" + trackResults.Result[4].Name + "\" by "  + trackResults.Result[4].Artists[0].Name + " from the album \"" + trackResults.Result[4].Album.Name + "\"";
+                string track0 = " \"" + trackResults.Result[0].Name + "\" by " + trackResults.Result[0].Artists[0].Name + " from the album \"" + trackResults.Result[0].Album.Name + "\"";
+                string track1 = " \"" + trackResults.Result[1].Name + "\" by " + trackResults.Result[1].Artists[0].Name + " from the album \"" + trackResults.Result[1].Album.Name + "\"";
+                string track2 = " \"" + trackResults.Result[2].Name + "\" by " + trackResults.Result[2].Artists[0].Name + " from the album \"" + trackResults.Result[2].Album.Name + "\"";
+                string track3 = " \"" + trackResults.Result[3].Name + "\" by " + trackResults.Result[3].Artists[0].Name + " from the album \"" + trackResults.Result[3].Album.Name + "\"";
+                string track4 = " \"" + trackResults.Result[4].Name + "\" by " + trackResults.Result[4].Artists[0].Name + " from the album \"" + trackResults.Result[4].Album.Name + "\"";
 
                 RadioButtonList1.Items[0].Text = track0;
                 RadioButtonList1.Items[1].Text = track1;
                 RadioButtonList1.Items[2].Text = track2;
                 RadioButtonList1.Items[3].Text = track3;
                 RadioButtonList1.Items[4].Text = track4;
+            }
+            catch (Exception)
+            {
+                Label1.Text = "Error: Please be more specific with your search terms";
             }
         }
 
@@ -130,6 +131,7 @@ namespace MixtapeGenerator
             var request = new ClientCredentialsRequest(CLIENTID, CLIENTSECRET);
             var response = await new OAuthClient(config).RequestToken(request);
             spotify = new SpotifyClient(config.WithToken(response.AccessToken));
+            //CHECK THE CONNECTION
 
             // returns [0, 1, 2, 3, 4] based on selected value
             string selected = RadioButtonList1.SelectedValue;
@@ -139,7 +141,7 @@ namespace MixtapeGenerator
             ////this should be seperate method
             //// Matches the choice from the list 
             //// choice = input from default.aspx
-            string trackID = await RetrieveTrackAsync(selected, "track id"); 
+            string trackID = await RetrieveTrackAsync(selected, "track id");
             string artistID = await RetrieveTrackAsync(selected, "artist id");
             string artist = await RetrieveTrackAsync(selected, "artist");
 
@@ -167,28 +169,35 @@ namespace MixtapeGenerator
                 }
             }
 
-           // information for generating the reccomendations
-            RecommendationsRequest recFinder = new RecommendationsRequest();
-            recFinder.SeedTracks.Add(trackID);
-            recFinder.SeedGenres.Add(artistGenres[0]);
-            recFinder.SeedArtists.Add(artistID);
-
-            //WE CAN CHANGE AMOUNT OF SONGS WE WANT TO GENERATE HERE
-            recFinder.Limit = 20;
-
-            //performt he recommendation search
-            var recList = spotify.Browse.GetRecommendations(recFinder);
-
-            string recommendations = "";
-            for (int i = 0; i < recList.Result.Tracks.Count; i++)
+            //if we managed to get a genre
+            if (artistGenres.Count > 0)
             {
-                string tmp = ((i + 1) + "- \"" + recList.Result.Tracks[i].Name + "\" by " + recList.Result.Tracks[i].Artists[0].Name + "<br>");
-                recommendations += tmp;
-                //maybe print the URL for a track here idk how to find it I'm happy with what is done so far.
-            }
+                // information for generating the reccomendations
+                RecommendationsRequest recFinder = new RecommendationsRequest();
+                recFinder.SeedTracks.Add(trackID);
+                recFinder.SeedGenres.Add(artistGenres[0]);
+                recFinder.SeedArtists.Add(artistID);
 
-            MixtapeTitle.Text = "Your personal mixtape is ready!";
-            MixtapeList.Text = recommendations;
+                //WE CAN CHANGE AMOUNT OF SONGS WE WANT TO GENERATE HERE
+                recFinder.Limit = 20;
+
+                //performt he recommendation search
+                var recList = spotify.Browse.GetRecommendations(recFinder);
+
+                string recommendations = "";
+                for (int i = 0; i < recList.Result.Tracks.Count; i++)
+                {
+                    string tmp = ((i + 1) + "- \"" + recList.Result.Tracks[i].Name + "\" by " + recList.Result.Tracks[i].Artists[0].Name + "<br>");
+                    recommendations += tmp;
+                    //maybe print the URL for a track here idk how to find it I'm happy with what is done so far.
+                }
+
+                MixtapeTitle.Text = "Your personal mixtape is ready!";
+                MixtapeList.Text = recommendations;
+            } else
+            {
+                MixtapeTitle.Text = "Error: Unable to create playlist for this song";
+            }
 
         }
 
@@ -199,9 +208,11 @@ namespace MixtapeGenerator
             string ACCOUNTID = System.Environment.GetEnvironmentVariable("AMAZON_ACCOUNTID");
             string ACCOUNTKEY = System.Environment.GetEnvironmentVariable("AMAZON_ACCOUNTKEY");
             string tableName = "Program5";
+
             //connect to amazon
             var credentials = new BasicAWSCredentials(ACCOUNTID, ACCOUNTKEY);
             AmazonDynamoDBClient client = new AmazonDynamoDBClient(credentials, RegionEndpoint.USWest2);
+            //NEED SOME SORT OF CHECKER HERE TOO
 
             //load and create query filter
             Table table = Table.LoadTable(client, tableName);
@@ -230,40 +241,40 @@ namespace MixtapeGenerator
         }
 
         //// Generate a random image using the Unsplash API based on the song input
-        //protected async System.Threading.Tasks.Task<String> GenerateImage(string song)
-        //{
-        //    string imageURL;
+        protected async System.Threading.Tasks.Task<String> GenerateImage(string song)
+        {
+           string imageURL;
 
-        //    // call to image API
-        //    var client = new HttpClient();
-        //    string APIKey = "[REPLACE_KE]";
-        //    string URL = "https://api.unsplash.com/photos/random/?client_id=" + APIKey + "&collections=1459961" + "&query=" + song;
+           // call to image API
+           var client = new HttpClient();
+           string APIKey = System.Environment.GetEnvironmentVariable("UNSPLASH_API_KEY");
+           string URL = "https://api.unsplash.com/photos/random/?client_id=" + APIKey + "&collections=1459961" + "&query=" + song;
 
-        //    var response = await client.GetAsync(URL);
+           var response = await client.GetAsync(URL);
 
-        //    // check that request is accepted 
-        //    if (response.IsSuccessStatusCode) // 2xx or 3xx code 
-        //    {
-        //        // Retrieve the json data from response 
-        //        string result = await response.Content.ReadAsStringAsync();
+           // check that request is accepted 
+           if (response.IsSuccessStatusCode) // 2xx or 3xx code 
+           {
+               // Retrieve the json data from response 
+               string result = await response.Content.ReadAsStringAsync();
 
-        //        // Deserialize json data: 
-        //        UnsplashAPI.Rootobject root = JsonConvert.DeserializeObject<UnsplashAPI.Rootobject>(result);
-        //        imageURL = root.urls.small;
-        //    }
+               // Deserialize json data: 
+               UnsplashAPI.Rootobject root = JsonConvert.DeserializeObject<UnsplashAPI.Rootobject>(result);
+               imageURL = root.urls.small;
+           }
 
-        //    // else, use the default image
-        //    else
-        //    {
-        //        imageURL = "https://images.unsplash.com/photo-1608934923502-4398e955df00?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDEwfHx8ZW58MHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60";
-        //    }
-        //    Console.Write(imageURL);
+           // else, use the default image
+           else
+           {
+               imageURL = "https://images.unsplash.com/photo-1608934923502-4398e955df00?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDEwfHx8ZW58MHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60";
+           }
+           Console.Write(imageURL);
 
-        //    // return the image URL 
-        //    return imageURL;
-        //}
+           // return the image URL 
+           return imageURL;
+        }
 
     }
-    	
+
 
 }
