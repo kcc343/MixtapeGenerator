@@ -32,7 +32,7 @@ namespace MixtapeGenerator
         protected async void Button1_Submit_Click(object sender, EventArgs e)
         {
             // Get song from user via TextBox
-            string song = Convert.ToString(TextBox1.Text);
+            // string song = Convert.ToString(TextBox1.Text);
             // Get artist from user via TextBox
             string artist = Convert.ToString(TextBox2.Text);
 
