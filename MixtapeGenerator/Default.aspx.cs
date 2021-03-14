@@ -126,6 +126,7 @@ namespace MixtapeGenerator
                         if (RadioButtonList1.Items[k].Text == " Choice -")
                         {
                             RadioButtonList1.Items[k].Enabled = false;
+                            RadioButtonList1.Items[k].Text = "Selection not available";
                         }
                     }
                     //string track0 = " \"" + trackResults.Result[0].Name + "\" by " + trackResults.Result[0].Artists[0].Name + " from the album \"" + trackResults.Result[0].Album.Name + "\"";
