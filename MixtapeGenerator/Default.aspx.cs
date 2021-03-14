@@ -44,8 +44,8 @@ namespace MixtapeGenerator
             string CLIENTSECRET = System.Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_SECRET");
 
             //amazon credentials and info
-            // string ACCOUNTID = System.Environment.GetEnvironmentVariable("AMAZON_ACCOUNTID");
-            // string ACCOUNTKEY = System.Environment.GetEnvironmentVariable("AMAZON_ACCOUNTKEY");
+            string ACCOUNTID = System.Environment.GetEnvironmentVariable("AMAZON_ACCOUNTID");
+            string ACCOUNTKEY = "sfsdf";
             string tableName = "Program5";
 
             //connect to spotify
