@@ -119,9 +119,9 @@ namespace MixtapeGenerator
         // After user confirms options, generate 20 recommended songs
         protected async void Button2_Submit_Click(object sender, EventArgs e)
         {
-            //string song = Convert.ToString(TextBox1.Text);
-            //string cover = await GenerateImage(song);
-            //Image1.ImageUrl = cover;
+            string song = Convert.ToString(TextBox1.Text);
+            string cover = await GenerateImage(song);
+            Image1.ImageUrl = cover;
 
             //SPOTIFY CREDENTIALS
             string CLIENTID = System.Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_ID");
