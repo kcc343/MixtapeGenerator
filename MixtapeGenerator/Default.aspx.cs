@@ -79,6 +79,10 @@ namespace MixtapeGenerator
                 //print list of first 5 items that appear in search result
                 for (int i = 0; i < 5; i++)
                 {
+                    if(i >= trackResults.Result.Count)
+                    {
+                        break;
+                    }
                     if (trackResults.Result[i] != null)
                     {
                         count++; 
