@@ -241,38 +241,38 @@ namespace MixtapeGenerator
         }
 
         //// Generate a random image using the Unsplash API based on the song input
-        //protected async System.Threading.Tasks.Task<String> GenerateImage(string song)
-        //{
-        //    string imageURL;
+        protected async System.Threading.Tasks.Task<String> GenerateImage(string song)
+        {
+           string imageURL;
 
-        //    // call to image API
-        //    var client = new HttpClient();
-        //    string APIKey = "[REPLACE_KE]";
-        //    string URL = "https://api.unsplash.com/photos/random/?client_id=" + APIKey + "&collections=1459961" + "&query=" + song;
+           // call to image API
+           var client = new HttpClient();
+           string APIKey = System.Environment.GetEnvironmentVariable("UNSPLASH_API_KEY");
+           string URL = "https://api.unsplash.com/photos/random/?client_id=" + APIKey + "&collections=1459961" + "&query=" + song;
 
-        //    var response = await client.GetAsync(URL);
+           var response = await client.GetAsync(URL);
 
-        //    // check that request is accepted 
-        //    if (response.IsSuccessStatusCode) // 2xx or 3xx code 
-        //    {
-        //        // Retrieve the json data from response 
-        //        string result = await response.Content.ReadAsStringAsync();
+           // check that request is accepted 
+           if (response.IsSuccessStatusCode) // 2xx or 3xx code 
+           {
+               // Retrieve the json data from response 
+               string result = await response.Content.ReadAsStringAsync();
 
-        //        // Deserialize json data: 
-        //        UnsplashAPI.Rootobject root = JsonConvert.DeserializeObject<UnsplashAPI.Rootobject>(result);
-        //        imageURL = root.urls.small;
-        //    }
+               // Deserialize json data: 
+               UnsplashAPI.Rootobject root = JsonConvert.DeserializeObject<UnsplashAPI.Rootobject>(result);
+               imageURL = root.urls.small;
+           }
 
-        //    // else, use the default image
-        //    else
-        //    {
-        //        imageURL = "https://images.unsplash.com/photo-1608934923502-4398e955df00?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDEwfHx8ZW58MHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60";
-        //    }
-        //    Console.Write(imageURL);
+           // else, use the default image
+           else
+           {
+               imageURL = "https://images.unsplash.com/photo-1608934923502-4398e955df00?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDEwfHx8ZW58MHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60";
+           }
+           Console.Write(imageURL);
 
-        //    // return the image URL 
-        //    return imageURL;
-        //}
+           // return the image URL 
+           return imageURL;
+        }
 
     }
 
