@@ -40,7 +40,7 @@ namespace MixtapeGenerator
             // Both input required, checked via .aspx file 
             string searchSong = song + " " + artist;
 
-            //Spotify:
+            //spotify credentials
             string CLIENTID = System.Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_ID");
             string CLIENTSECRET = System.Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_SECRET");
 
@@ -136,12 +136,12 @@ namespace MixtapeGenerator
                     //RadioButtonList1.Items[3].Text = track3;
                     //RadioButtonList1.Items[4].Text = track4;
                 }
-            }
+        }
             catch (Exception)
             {
                 Label1.Text = "Error: Please be more specific with your search terms";
             }
-        }
+}
 
         // After user confirms options, generate 20 recommended songs
         protected async void Button2_Submit_Click(object sender, EventArgs e)
